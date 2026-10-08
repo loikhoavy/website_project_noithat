@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Giỏ hàng | Nội Thất" description="Xem lại các sản phẩm bạn đã chọn và tiến hành đặt hàng.">
+
+  <div class="border-b border-walnut-900/10 bg-sand-100">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:py-12">
+      <nav class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">
+        <a href="/" class="transition-colors hover:text-clay-600">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <span class="text-walnut-900">Giỏ hàng</span>
+      </nav>
+      <h1 class="mt-4 font-display text-3xl tracking-tight sm:text-4xl">Giỏ hàng</h1>
+      <p class="mt-3 text-sm text-walnut-800"><span data-cart-count-label>0</span> sản phẩm trong giỏ</p>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-7xl px-4 py-10 sm:py-14">
+    <div data-cart-root>
+
+      <div data-cart-empty class="hidden border border-walnut-900/10 px-6 py-20 text-center">
+        <p class="font-display text-xl">Giỏ hàng của bạn đang trống</p>
+        <p class="mt-3 text-sm text-walnut-800">Hãy chọn vài món ưng ý trước khi quay lại đây nhé.</p>
+        <a href="/san-pham" class="mt-8 inline-block border border-walnut-900 px-8 py-3 text-xs uppercase tracking-[0.2em] text-walnut-900 transition-colors hover:bg-walnut-900 hover:text-sand-50">
+          Tiếp tục mua sắm
+        </a>
+      </div>
+
+      <div data-cart-content class="hidden">
+        <div class="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-16">
+
+          <div>
+            <div class="flex items-center justify-between border-b border-walnut-900/10 pb-3 text-[11px] uppercase tracking-[0.2em] text-walnut-800">
+              <span>Sản phẩm</span>
+              <span>Số lượng / Thành tiền</span>
+            </div>
+            <div data-cart-items></div>
+          </div>
+
+          <aside class="h-fit border border-walnut-900/10 p-6">
+            <h2 class="text-[11px] uppercase tracking-[0.25em] text-walnut-900">Tóm tắt đơn hàng</h2>
+
+            <dl class="mt-6 flex flex-col gap-3 text-sm">
+              <div class="flex items-center justify-between">
+                <dt class="text-walnut-800">Tạm tính</dt>
+                <dd data-cart-subtotal class="text-walnut-900">0₫</dd>
+              </div>
+              <div class="flex items-center justify-between">
+                <dt class="text-walnut-800">Phí vận chuyển</dt>
+                <dd class="text-walnut-900">Tính khi thanh toán</dd>
+              </div>
+            </dl>
+
+            <div class="mt-6 flex items-center justify-between border-t border-walnut-900/10 pt-6">
+              <span class="text-sm text-walnut-900">Tổng cộng</span>
+              <span data-cart-total class="text-lg text-walnut-900">0₫</span>
+            </div>
+
+            <a href="/thanh-toan" class="mt-6 block bg-clay-600 px-6 py-4 text-center text-xs uppercase tracking-[0.2em] text-sand-50 transition-colors hover:bg-clay-500">
+              Tiến hành đặt hàng
+            </a>
+
+            <button type="button" data-cart-clear class="mt-4 w-full text-center text-xs uppercase tracking-[0.2em] text-walnut-800 underline underline-offset-4 transition-colors hover:text-clay-600">
+              Xoá toàn bộ giỏ
+            </button>
+          </aside>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  import { readCart, updateQty, removeItem, clearCart, countItems, totalPrice, formatVnd } from '../../scripts/cart';
+  import type { CartItem } from '../../scripts/cart';
+
+  const root = document.querySelector<HTMLElement>('[data-cart-root]');
+
+  const itemsEl = root?.querySelector<HTMLElement>('[data-cart-items]');
+  const emptyEl = root?.querySelector<HTMLElement>('[data-cart-empty]');
+  const contentEl = root?.querySelector<HTMLElement>('[data-cart-content]');
+  const subtotalEl = root?.querySelector<HTMLElement>('[data-cart-subtotal]');
+  const totalEl = root?.querySelector<HTMLElement>('[data-cart-total]');
+  const clearBtn = root?.querySelector<HTMLButtonElement>('[data-cart-clear]');
+  const countLabel = document.querySelector<HTMLElement>('[data-cart-count-label]');
+
+  if (itemsEl && emptyEl && contentEl && subtotalEl && totalEl) {
+
+    const rowHtml = (item: CartItem) => `
+      <div data-row="${item.slug}" class="flex gap-4 border-b border-walnut-900/10 py-6">
+        <a href="/san-pham/${item.slug}" class="block h-24 w-20 shrink-0 bg-sand-200" aria-label="${item.name}"></a>
+        <div class="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div class="min-w-0">
+            <a href="/san-pham/${item.slug}" class="text-sm text-walnut-900 transition-colors hover:text-clay-600">${item.name}</a>
+            <p class="mt-1 text-xs text-walnut-800">${formatVnd(item.price)}</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex h-10 items-center border border-walnut-900/20">
+              <button type="button" data-row-down class="h-full w-9 text-walnut-900 transition-colors hover:text-clay-600" aria-label="Giảm số lượng">-</button>
+              <input data-row-qty type="text" value="${item.qty}" readonly aria-label="Số lượng" class="h-full w-10 border-x border-walnut-900/20 bg-transparent text-center text-sm outline-none" />
+              <button type="button" data-row-up class="h-full w-9 text-walnut-900 transition-colors hover:text-clay-600" aria-label="Tăng số lượng">+</button>
+            </div>
+            <p class="w-28 text-right text-sm text-walnut-900">${formatVnd(item.price * item.qty)}</p>
+            <button type="button" data-row-remove class="text-xs uppercase tracking-[0.15em] text-walnut-800 underline underline-offset-4 transition-colors hover:text-clay-600">Xoá</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const bindRows = () => {
+      itemsEl.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+        const slug = row.getAttribute('data-row') || '';
+        const qtyInput = row.querySelector<HTMLInputElement>('[data-row-qty]');
+        const current = () => Number(qtyInput?.value ?? 1) || 1;
+
+        row.querySelector('[data-row-up]')?.addEventListener('click', () => {
+          updateQty(slug, current() + 1);
+          render();
+        });
+        row.querySelector('[data-row-down]')?.addEventListener('click', () => {
+          updateQty(slug, current() - 1);
+          render();
+        });
+        row.querySelector('[data-row-remove]')?.addEventListener('click', () => {
+          removeItem(slug);
+          render();
+        });
+      });
+    };
+
+    const render = () => {
+      const items = readCart();
+      const isEmpty = items.length === 0;
+
+      itemsEl.innerHTML = items.map(rowHtml).join('');
+      emptyEl.classList.toggle('hidden', !isEmpty);
+      contentEl.classList.toggle('hidden', isEmpty);
+
+      const subtotal = totalPrice(items);
+      subtotalEl.textContent = formatVnd(subtotal);
+      totalEl.textContent = formatVnd(subtotal);
+      if (countLabel) countLabel.textContent = String(countItems(items));
+
+      if (!isEmpty) bindRows();
+    };
+
+    clearBtn?.addEventListener('click', () => {
+      clearCart();
+      render();
+    });
+
+    window.addEventListener('storage', render);
+    render();
+  }
+</script>

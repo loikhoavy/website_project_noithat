@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+
+interface NavItem {
+  label: string;
+  href: string;
+  ready: boolean;
+}
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const nav: NavItem[] = [
+  { label: 'Tổng quan', href: '/admin', ready: true },
+  { label: 'Sản phẩm', href: '/admin#danh-sach-san-pham', ready: true },
+  { label: 'Đơn hàng', href: '/admin', ready: false },
+  { label: 'Khách hàng', href: '/admin', ready: false },
+  { label: 'Phong thủy', href: '/phong-thuy', ready: true },
+  { label: 'Cài đặt', href: '/admin', ready: false },
+];
+---
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" />
+<title>{title}</title>
+</head>
+<body class="min-h-screen bg-sand-100 text-walnut-900">
+<div class="flex min-h-screen flex-col lg:flex-row">
+
+  <aside class="shrink-0 bg-walnut-900 px-5 py-5 text-sand-50 lg:sticky lg:top-0 lg:h-screen lg:w-64">
+    <p class="text-base font-semibold uppercase tracking-[0.3em]">Nội Thất</p>
+    <p class="mt-1 text-[10px] uppercase tracking-[0.25em] text-sand-200">Bảng quản trị</p>
+
+    <nav class="mt-6 flex gap-2 overflow-x-auto pb-1 text-sm lg:mt-10 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0" aria-label="Điều hướng quản trị">
+      {nav.map((item) => (
+        item.ready ? (
+          <a href={item.href} class="whitespace-nowrap rounded px-3 py-2 transition-colors hover:bg-sand-50/10">{item.label}</a>
+        ) : (
+          <span class="whitespace-nowrap rounded px-3 py-2 text-sand-50/40" title="Sắp có">{item.label}</span>
+        )
+      ))}
+    </nav>
+
+    <a href="/" class="mt-8 hidden text-xs uppercase tracking-[0.2em] text-sand-200 underline underline-offset-4 transition-colors hover:text-sand-50 lg:inline-block">
+      Về trang bán hàng
+    </a>
+  </aside>
+
+  <main class="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-10">
+    <slot />
+  </main>
+
+</div>
+</body>
+</html>

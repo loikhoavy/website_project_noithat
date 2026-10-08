@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { LOAI_PHONG, NHAN_XET, AI_HOOK } from '../../scripts/phong-thuy';
+
+const namHienTai = new Date().getFullYear();
+---
+
+<BaseLayout title="Phong thủy | Nội Thất" description="Nhập năm sinh, giới tính và loại phòng để xem gợi ý hướng, màu sắc và cách bài trí theo cung mệnh.">
+
+  <div class="border-b border-walnut-900/10 bg-sand-100">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:py-12">
+      <nav class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">
+        <a href="/" class="transition-colors hover:text-clay-600">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <span class="text-walnut-900">Phong thủy</span>
+      </nav>
+      <h1 class="mt-4 font-display text-3xl tracking-tight sm:text-4xl">Tư vấn phong thủy</h1>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-walnut-800">
+        Điền năm sinh, giới tính và loại phòng bạn đang hoàn thiện. Kết quả gợi ý hướng tốt, màu sắc hợp và cách bài trí cơ bản theo cung mệnh.
+      </p>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-7xl px-4 py-10 sm:py-14">
+    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+
+      <div>
+        <form data-kt-form novalidate class="flex flex-col gap-6">
+          <div>
+            <label for="kt-year" class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">Năm sinh (dương lịch)</label>
+            <input
+              id="kt-year"
+              name="namSinh"
+              type="number"
+              min="1930"
+              max={namHienTai}
+              inputmode="numeric"
+              placeholder="Ví dụ: 1990"
+              class="mt-2 w-full border border-walnut-900/20 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-walnut-800/50 focus:border-clay-600"
+            />
+            <p data-error-for="namSinh" class="mt-2 hidden text-xs text-danger-600"></p>
+          </div>
+
+          <div>
+            <label for="kt-gender" class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">Giới tính</label>
+            <select id="kt-gender" name="gioiTinh" class="mt-2 w-full border border-walnut-900/20 bg-transparent px-4 py-3 text-sm text-walnut-900 outline-none transition-colors focus:border-clay-600">
+              <option value="">— Chọn giới tính —</option>
+              <option value="nam">Nam</option>
+              <option value="nu">Nữ</option>
+            </select>
+            <p data-error-for="gioiTinh" class="mt-2 hidden text-xs text-danger-600"></p>
+          </div>
+
+          <div>
+            <label for="kt-room" class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">Loại phòng</label>
+            <select id="kt-room" name="loaiPhong" class="mt-2 w-full border border-walnut-900/20 bg-transparent px-4 py-3 text-sm text-walnut-900 outline-none transition-colors focus:border-clay-600">
+              <option value="">— Chọn loại phòng —</option>
+              {LOAI_PHONG.map((room) => <option value={room.key}>{room.label}</option>)}
+            </select>
+            <p data-error-for="loaiPhong" class="mt-2 hidden text-xs text-danger-600"></p>
+          </div>
+
+          <button type="submit" class="mt-2 w-fit bg-clay-600 px-8 py-4 text-xs uppercase tracking-[0.2em] text-sand-50 transition-colors hover:bg-clay-500">
+            Xem tư vấn
+          </button>
+        </form>
+
+        <p class="mt-6 text-xs leading-relaxed text-walnut-800">
+          Nếu bạn sinh vào tháng 1 hoặc tháng 2 dương lịch, nên đối chiếu lại theo năm âm lịch vì thời điểm Tết có thể lệch một năm.
+        </p>
+      </div>
+
+      <div data-kt-result class="h-fit border border-walnut-900/10 p-6 sm:p-8">
+        <p data-kt-placeholder class="text-sm leading-relaxed text-walnut-800">
+          Điền thông tin bên trái rồi bấm “Xem tư vấn” để nhận gợi ý theo cung mệnh.
+        </p>
+
+        <div data-kt-output class="hidden">
+          <p class="text-[11px] uppercase tracking-[0.25em] text-walnut-800">Cung mệnh</p>
+          <p data-kt-cung class="mt-2 font-display text-2xl tracking-tight text-walnut-900"></p>
+          <p data-kt-tom-tat class="mt-2 text-sm text-walnut-800"></p>
+
+          <div class="mt-8">
+            <p class="text-[11px] uppercase tracking-[0.25em] text-walnut-800">Bốn hướng tốt</p>
+            <dl data-kt-huong class="mt-4 flex flex-col gap-3 text-sm"></dl>
+          </div>
+
+          <div class="mt-8">
+            <p class="text-[11px] uppercase tracking-[0.25em] text-walnut-800">Màu sắc hợp</p>
+            <p data-kt-mau class="mt-3 text-sm text-walnut-900"></p>
+          </div>
+
+          <div class="mt-8">
+            <p class="text-[11px] uppercase tracking-[0.25em] text-walnut-800">Gợi ý bài trí</p>
+            <ul data-kt-goi-y class="mt-4 flex list-disc flex-col gap-2 pl-5 text-sm leading-relaxed text-walnut-800"></ul>
+          </div>
+
+          <p class="mt-8 border-t border-walnut-900/10 pt-5 text-xs leading-relaxed text-walnut-800">{NHAN_XET}</p>
+          <p class="mt-2 text-xs leading-relaxed text-walnut-800">{AI_HOOK}</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  import { tuVanPhongThuy } from '../../scripts/phong-thuy';
+  import { initAuthForm, required } from '../../scripts/validate';
+  import type { Rule } from '../../scripts/validate';
+
+  const form = document.querySelector<HTMLFormElement>('[data-kt-form]');
+  const placeholderEl = document.querySelector<HTMLElement>('[data-kt-placeholder]');
+  const outputEl = document.querySelector<HTMLElement>('[data-kt-output]');
+  const cungEl = document.querySelector<HTMLElement>('[data-kt-cung]');
+  const tomTatEl = document.querySelector<HTMLElement>('[data-kt-tom-tat]');
+  const huongEl = document.querySelector<HTMLElement>('[data-kt-huong]');
+  const mauEl = document.querySelector<HTMLElement>('[data-kt-mau]');
+  const goiYEl = document.querySelector<HTMLElement>('[data-kt-goi-y]');
+
+  const namHienTai = new Date().getFullYear();
+
+  const namSinhHopLe: Rule = (value) => {
+    const raw = value.trim();
+    if (!/^\d{4}$/.test(raw)) return 'Vui lòng nhập năm sinh gồm 4 chữ số.';
+    const year = Number(raw);
+    if (year < 1930 || year > namHienTai) {
+      return 'Năm sinh cần nằm trong khoảng 1930 – ' + namHienTai + '.';
+    }
+    return null;
+  };
+
+  const renderResult = () => {
+    if (!form) return;
+
+    const data = new FormData(form);
+    const result = tuVanPhongThuy({
+      namSinh: Number(data.get('namSinh')),
+      gioiTinh: data.get('gioiTinh') === 'nu' ? 'nu' : 'nam',
+      loaiPhong: String(data.get('loaiPhong') ?? ''),
+    });
+
+    if (cungEl) cungEl.textContent = result.cung + ' · quái số ' + result.quaiSo;
+    if (tomTatEl) tomTatEl.textContent = result.nhomMenh + ' · ngũ hành ' + result.nguHanh;
+
+    if (huongEl) {
+      huongEl.textContent = '';
+      result.huongTot.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-4 border-b border-walnut-900/10 pb-2';
+
+        const dt = document.createElement('dt');
+        dt.className = 'text-walnut-800';
+        dt.textContent = item.vaiTro;
+
+        const dd = document.createElement('dd');
+        dd.className = 'text-walnut-900';
+        dd.textContent = item.huong;
+
+        row.appendChild(dt);
+        row.appendChild(dd);
+        huongEl.appendChild(row);
+      });
+    }
+
+    if (mauEl) mauEl.textContent = result.mauSac.join(' · ');
+
+    if (goiYEl) {
+      goiYEl.textContent = '';
+      result.goiY.forEach((line) => {
+        const li = document.createElement('li');
+        li.textContent = line;
+        goiYEl.appendChild(li);
+      });
+    }
+
+    placeholderEl?.classList.add('hidden');
+    outputEl?.classList.remove('hidden');
+  };
+
+  if (form) {
+    initAuthForm(
+      form,
+      {
+        namSinh: [required('Vui lòng nhập năm sinh.'), namSinhHopLe],
+        gioiTinh: [required('Vui lòng chọn giới tính.')],
+        loaiPhong: [required('Vui lòng chọn loại phòng.')],
+      },
+      renderResult
+    );
+  }
+</script>

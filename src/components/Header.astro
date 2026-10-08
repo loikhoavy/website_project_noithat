@@ -1,0 +1,342 @@
+---
+interface MenuLink {
+  label: string;
+  href: string;
+}
+
+interface MenuItem {
+  label: string;
+  href?: string;
+  children?: MenuLink[];
+}
+
+const menu: MenuItem[] = [
+  {
+    label: 'Phòng khách',
+    children: [
+      { label: 'Sofa', href: '/san-pham?danh-muc=sofa' },
+      { label: 'Ghế thư giãn', href: '/san-pham?danh-muc=ghe' },
+      { label: 'Bàn trà', href: '/san-pham?danh-muc=trang-tri' },
+      { label: 'Kệ tivi', href: '/san-pham?danh-muc=tu-ke' },
+    ],
+  },
+  {
+    label: 'Phòng ăn',
+    children: [
+      { label: 'Bàn ăn', href: '/san-pham?danh-muc=ban-an' },
+      { label: 'Ghế ăn', href: '/san-pham?danh-muc=ghe' },
+      { label: 'Đèn thả trần', href: '/san-pham?danh-muc=den' },
+    ],
+  },
+  {
+    label: 'Phòng ngủ',
+    children: [
+      { label: 'Giường ngủ', href: '/san-pham?danh-muc=giuong' },
+      { label: 'Tủ quần áo', href: '/san-pham?danh-muc=tu-ke' },
+      { label: 'Gương trang trí', href: '/san-pham?danh-muc=trang-tri' },
+    ],
+  },
+  {
+    label: 'Làm việc',
+    children: [
+      { label: 'Ghế công thái học', href: '/san-pham?danh-muc=ghe' },
+      { label: 'Kệ sách', href: '/san-pham?danh-muc=tu-ke' },
+      { label: 'Đèn bàn', href: '/san-pham?danh-muc=den' },
+    ],
+  },
+  {
+    label: 'Ngoài trời',
+    children: [
+      { label: 'Ghế gỗ teak', href: '/san-pham?khong-gian=ngoai-troi' },
+      { label: 'Toàn bộ ngoài trời', href: '/san-pham?khong-gian=ngoai-troi' },
+    ],
+  },
+  {
+    label: 'Chiếu sáng',
+    children: [
+      { label: 'Đèn sàn', href: '/san-pham?danh-muc=den' },
+      { label: 'Đèn thả trần', href: '/san-pham?danh-muc=den' },
+      { label: 'Đèn bàn', href: '/san-pham?danh-muc=den' },
+    ],
+  },
+  {
+    label: 'Trang trí',
+    children: [
+      { label: 'Bàn trà', href: '/san-pham?danh-muc=trang-tri' },
+      { label: 'Gương', href: '/san-pham?danh-muc=trang-tri' },
+      { label: 'Đồ trang trí', href: '/san-pham?danh-muc=trang-tri' },
+    ],
+  },
+  { label: 'Hàng mới về', href: '/san-pham' },
+  {
+    label: 'Phong thủy',
+    children: [
+      { label: 'Tư vấn theo năm sinh', href: '/phong-thuy' },
+      { label: 'Hướng và màu sắc hợp', href: '/phong-thuy' },
+      { label: 'Bài trí theo loại phòng', href: '/phong-thuy' },
+    ],
+  },
+];
+
+const secondary: MenuLink[] = [
+  { label: 'Showroom', href: '/#showroom' },
+  { label: 'Chương trình đối tác', href: '/#doi-tac' },
+  { label: 'Không gian thực tế', href: '/#du-an' },
+  { label: 'Câu chuyện thương hiệu', href: '/#cau-chuyen' },
+  { label: 'Tài khoản của tôi', href: '/dang-nhap' },
+  { label: 'Đăng nhập / Đăng ký', href: '/dang-nhap' },
+];
+
+const isHome = Astro.url.pathname === '/';
+---
+
+<header
+  id="site-header"
+  data-overlay={isHome ? 'true' : 'false'}
+  class="fixed inset-x-0 top-0 z-50"
+>
+  <div class="mx-auto flex h-16 max-w-[1700px] items-center justify-between px-4 sm:h-20 sm:px-8">
+    <div class="flex items-center gap-4 sm:gap-6">
+      <button
+        id="menu-btn"
+        type="button"
+        class="inline-flex h-10 w-10 items-center justify-center transition-opacity hover:opacity-60"
+        aria-label="Mở menu"
+        aria-expanded="false"
+        aria-controls="menu-panel"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <a href="/" class="logo-mark text-lg font-semibold uppercase tracking-[0.32em] sm:text-2xl">
+        Nội Thất
+      </a>
+    </div>
+
+    <div class="flex items-center gap-4 sm:gap-7">
+      <a
+        href="/dang-nhap"
+        class="inline-flex h-10 w-10 items-center justify-center transition-opacity hover:opacity-60"
+        aria-label="Tài khoản"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-[22px] w-[22px]">
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M4.5 20c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5" stroke-linecap="round" />
+        </svg>
+      </a>
+
+      <a
+        href="/gio-hang"
+        class="relative inline-flex h-10 w-10 items-center justify-center transition-opacity hover:opacity-60"
+        aria-label="Giỏ hàng"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-[22px] w-[22px]">
+          <path d="M5 8h14l-1.2 12H6.2L5 8Z" stroke-linejoin="round" />
+          <path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke-linecap="round" />
+        </svg>
+        <span
+          data-cart-count
+          style="display:none"
+          class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-clay-600 px-1 text-[10px] font-semibold text-sand-50"
+        >0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{/* Bảng menu trượt */}
+<div id="menu-panel" class="pointer-events-none fixed inset-0 z-[60] opacity-0 transition-opacity duration-300">
+  <div id="menu-backdrop" class="absolute inset-0 bg-walnut-900/40" aria-hidden="true"></div>
+
+  <aside
+    class="absolute left-0 top-0 flex h-full w-full max-w-sm flex-col bg-sand-50 px-6 py-6 text-walnut-900 shadow-2xl"
+    aria-label="Menu chính"
+  >
+    <div class="flex shrink-0 items-center justify-between">
+      <span class="text-lg font-semibold uppercase tracking-[0.32em]">Nội Thất</span>
+      <button
+        id="menu-close"
+        type="button"
+        class="inline-flex h-10 w-10 items-center justify-center transition-opacity hover:opacity-60"
+        aria-label="Đóng menu"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <form data-menu-search role="search" class="mt-8 flex shrink-0 items-center gap-3 border-b border-walnut-900/20 pb-2">
+      <input
+        type="search"
+        name="q"
+        placeholder="Tìm sản phẩm"
+        aria-label="Tìm sản phẩm"
+        class="w-full bg-transparent text-sm outline-none placeholder:text-walnut-800/60"
+      />
+      <button type="submit" aria-label="Tìm" class="text-walnut-800 transition-colors hover:text-clay-600">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-5 w-5">
+          <circle cx="11" cy="11" r="6" />
+          <path d="M15.5 15.5 20 20" stroke-linecap="round" />
+        </svg>
+      </button>
+    </form>
+
+    <nav class="mt-6 flex-1 overflow-y-auto" aria-label="Danh mục">
+      <ul class="flex flex-col">
+        {menu.map((item) => (
+          <li class="border-b border-walnut-900/10">
+            {item.children ? (
+              <details class="menu-group">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 py-3">
+                  <span class="text-base tracking-tight text-walnut-900">{item.label}</span>
+                  <span class="menu-plus text-lg leading-none text-walnut-800" aria-hidden="true">+</span>
+                </summary>
+                <ul class="flex flex-col gap-2 pb-4 pl-4">
+                  {item.children.map((child) => (
+                    <li>
+                      <a href={child.href} class="text-sm text-walnut-800 transition-colors hover:text-clay-600">{child.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a href={item.href} class="block py-3 text-base tracking-tight text-walnut-900 transition-colors hover:text-clay-600">{item.label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <ul class="mt-8 flex flex-col gap-3 pb-10 text-sm text-walnut-800">
+        {secondary.map((item) => (
+          <li>
+            <a href={item.href} class="transition-colors hover:text-clay-600">{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+</div>
+
+<style>
+  #site-header {
+    color: #111111;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--color-sand-200);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Trang chủ: header trong suốt nằm trên hero */
+  #site-header[data-overlay='true'] {
+    color: #ffffff;
+    background-color: transparent;
+    border-bottom-color: transparent;
+  }
+
+  #site-header[data-overlay='true'].is-scrolled {
+    color: #111111;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-bottom-color: var(--color-sand-200);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Panel trượt: dùng transform của chính component, KHÔNG dùng utility translate của Tailwind.
+     Tailwind v4 dịch chuyển bằng thuộc tính `translate`, còn đây là `transform` — hai thuộc tính
+     khác nhau nên nếu trộn vào nhau panel sẽ không bao giờ trượt vào. */
+  #menu-panel > aside {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  #menu-panel.is-open {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  #menu-panel.is-open > aside {
+    transform: translateX(0);
+  }
+
+  .menu-group > summary {
+    list-style: none;
+  }
+
+  .menu-group > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .menu-plus {
+    transition: transform 0.2s ease;
+  }
+
+  .menu-group[open] .menu-plus {
+    transform: rotate(45deg);
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const menuBtn = document.getElementById('menu-btn');
+  const menuClose = document.getElementById('menu-close');
+  const menuPanel = document.getElementById('menu-panel');
+  const menuBackdrop = document.getElementById('menu-backdrop');
+  const searchForm = document.querySelector<HTMLFormElement>('[data-menu-search]');
+  const searchInput = document.querySelector<HTMLInputElement>('[data-menu-search] input[name="q"]');
+
+  if (header?.dataset.overlay === 'true') {
+    const onScroll = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 40);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  const openMenu = () => {
+    if (!menuPanel || !menuBtn) return;
+    menuPanel.classList.add('is-open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeMenu = () => {
+    if (!menuPanel || !menuBtn) return;
+    menuPanel.classList.remove('is-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+
+  menuBtn?.addEventListener('click', openMenu);
+  menuClose?.addEventListener('click', closeMenu);
+  menuBackdrop?.addEventListener('click', closeMenu);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  if (searchForm && searchInput) {
+    searchForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const keyword = searchInput.value.trim();
+      window.location.href = keyword ? '/san-pham?q=' + encodeURIComponent(keyword) : '/san-pham';
+    });
+  }
+</script>
+
+<script>
+  import { readCart, countItems, CART_EVENT } from '../scripts/cart';
+
+  const badge = document.querySelector<HTMLElement>('[data-cart-count]');
+
+  const syncBadge = () => {
+    if (!badge) return;
+    const count = countItems(readCart());
+    badge.textContent = String(count);
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  };
+
+  syncBadge();
+  window.addEventListener(CART_EVENT, syncBadge);
+  window.addEventListener('storage', syncBadge);
+</script>

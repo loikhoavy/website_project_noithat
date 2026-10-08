@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products, formatVnd } from '../../data/products';
+import type { Product } from '../../data/products';
+import { getProductDetail } from '../../data/product-details';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const detail = getProductDetail(product.slug);
+const related = products
+  .filter((item) => item.category === product.category && item.slug !== product.slug)
+  .slice(0, 4);
+---
+
+<BaseLayout title={`${product.name} | Nội Thất`} description={detail.description}>
+
+  {/* ĐƯỜNG DẪN */}
+  <div class="border-b border-walnut-900/10 bg-sand-100">
+    <div class="mx-auto max-w-7xl px-4 py-6">
+      <nav class="text-[11px] uppercase tracking-[0.2em] text-walnut-800">
+        <a href="/" class="transition-colors hover:text-clay-600">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <a href="/san-pham" class="transition-colors hover:text-clay-600">Sản phẩm</a>
+        <span class="mx-2">/</span>
+        <span class="text-walnut-900">{product.name}</span>
+      </nav>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-7xl px-4 py-10 sm:py-16">
+    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+
+      {/* ẢNH SẢN PHẨM */}
+      <div>
+        <div class="relative aspect-[4/5] w-full overflow-hidden bg-sand-200">
+          {product.isNew && (
+            <span class="absolute left-4 top-4 bg-sand-50/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-walnut-900">
+              Mới
+            </span>
+          )}
+        </div>
+        <div class="mt-3 grid grid-cols-4 gap-3">
+          <span class="aspect-square w-full bg-sand-200"></span>
+          <span class="aspect-square w-full bg-sand-200"></span>
+          <span class="aspect-square w-full bg-sand-200"></span>
+          <span class="aspect-square w-full bg-sand-200"></span>
+        </div>
+      </div>
+
+      {/* THÔNG TIN SẢN PHẨM */}
+      <div>
+        <p class="text-[11px] uppercase tracking-[0.25em] text-walnut-800">{product.categoryLabel}</p>
+        <h1 class="mt-3 font-display text-3xl tracking-tight sm:text-4xl">{product.name}</h1>
+        <p class="mt-5 text-2xl text-walnut-900">{formatVnd(product.price)}</p>
+
+        <p class="mt-6 max-w-md text-sm leading-relaxed text-walnut-800">{detail.description}</p>
+
+        <dl class="mt-8 grid grid-cols-[7rem_1fr] gap-y-4 border-y border-walnut-900/10 py-6 text-sm">
+          <dt class="text-walnut-800">Chất liệu</dt>
+          <dd class="text-walnut-900">{product.material}</dd>
+          <dt class="text-walnut-800">Kích thước</dt>
+          <dd class="text-walnut-900">{detail.dimensions}</dd>
+          <dt class="text-walnut-800">Không gian</dt>
+          <dd class="text-walnut-900">{product.spaceLabel}</dd>
+          <dt class="text-walnut-800">Bảo hành</dt>
+          <dd class="text-walnut-900">{detail.warranty}</dd>
+        </dl>
+
+        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+          <div class="flex h-12 w-fit items-center border border-walnut-900/20">
+            <button type="button" data-qty-down class="h-full w-12 text-lg text-walnut-900 transition-colors hover:text-clay-600" aria-label="Giảm số lượng">-</button>
+            <input data-qty type="text" value="1" readonly aria-label="Số lượng" class="h-full w-12 border-x border-walnut-900/20 bg-transparent text-center text-sm outline-none" />
+            <button type="button" data-qty-up class="h-full w-12 text-lg text-walnut-900 transition-colors hover:text-clay-600" aria-label="Tăng số lượng">+</button>
+          </div>
+
+          <button
+            type="button"
+            data-add-to-cart
+            data-slug={product.slug}
+            data-name={product.name}
+            data-price={product.price}
+            class="h-12 flex-1 bg-clay-600 px-8 text-xs uppercase tracking-[0.2em] text-sand-50 transition-colors hover:bg-clay-500"
+          >
+            Thêm vào giỏ hàng
+          </button>
+        </div>
+
+        <a href="tel:1900636884" class="mt-4 inline-block text-xs uppercase tracking-[0.2em] text-walnut-800 underline underline-offset-4 transition-colors hover:text-clay-600">
+          Gọi tư vấn: 1900 636884
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="border-t border-walnut-900/10 bg-sand-100">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:py-20">
+        <h2 class="font-display text-2xl tracking-tight sm:text-3xl">Sản phẩm liên quan</h2>
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {related.map((item) => <ProductCard product={item} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+</BaseLayout>
+
+<script>
+  import { addToCart } from '../../scripts/cart';
+
+  const qtyInput = document.querySelector<HTMLInputElement>('[data-qty]');
+  const qtyDown = document.querySelector<HTMLButtonElement>('[data-qty-down]');
+  const qtyUp = document.querySelector<HTMLButtonElement>('[data-qty-up]');
+  const addBtn = document.querySelector<HTMLButtonElement>('[data-add-to-cart]');
+
+  const currentQty = () => Number(qtyInput?.value ?? 1) || 1;
+
+  const setQty = (value: number) => {
+    if (!qtyInput) return;
+    qtyInput.value = String(Math.min(99, Math.max(1, value)));
+  };
+
+  qtyUp?.addEventListener('click', () => setQty(currentQty() + 1));
+  qtyDown?.addEventListener('click', () => setQty(currentQty() - 1));
+
+  if (addBtn) {
+    const label = addBtn.textContent.trim();
+
+    addBtn.addEventListener('click', () => {
+      addToCart(
+        {
+          slug: addBtn.dataset.slug ?? '',
+          name: addBtn.dataset.name ?? '',
+          price: Number(addBtn.dataset.price) || 0,
+        },
+        currentQty()
+      );
+
+      addBtn.textContent = 'Đã thêm vào giỏ hàng';
+      addBtn.disabled = true;
+
+      window.setTimeout(() => {
+        addBtn.textContent = label;
+        addBtn.disabled = false;
+      }, 1500);
+    });
+  }
+</script>

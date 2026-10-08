@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+/* Nền và chữ */
+--color-sand-50: #ffffff;
+--color-sand-100: #f4f4f4;
+--color-sand-200: #e8e8e8;
+--color-walnut-800: #4f4f4f;
+--color-walnut-900: #111111;
+
+/* Điểm nhấn */
+--color-clay-500: #4f4f4f;
+--color-clay-600: #333333;
+--color-olive-700: #808080;
+--color-danger-600: #a3012c;
+
+/* Chữ */
+--font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+--font-display: "Lora", ui-serif, Georgia, serif;
+}
+
+@layer base {
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+background-color: var(--color-sand-50);
+color: var(--color-walnut-900);
+font-family: var(--font-sans);
+}
+
+h1, h2, h3 { font-family: var(--font-display); }
+}
